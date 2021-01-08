@@ -1,14 +1,33 @@
-# Welcome to your CDK TypeScript project!
+# Locust Cluster
 
-This is a blank project for TypeScript development with CDK.
+The CDK code for deploying [Locust](https://locust.io/) cluster on Fargate
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## :warning: DO NOT DEPLOY WITH DEFAULT CONFIGURATION :warning:
 
-## Useful commands
+If you deploy the Stack as is, anyone can see the Locust GUI.
+To prevent this, you need to change the security group attached Load Balancer before deploying it.
 
- * `npm run build`   compile typescript to js
- * `npm run watch`   watch for changes and compile
- * `npm run test`    perform the jest unit tests
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk synth`       emits the synthesized CloudFormation template
+[Security Group attached Load Balancer](https://github.com/zaltoprofen/locust-cluster/blob/6ad86c2b8f43c08df55cee71c67674bad9c738f3/lib/locust-cluster-stack.ts#L33-L34)
+
+## Installation
+
+```bash
+git clone https://github.com/zaltoprofen/locust-cluster.git
+cd locust-cluster
+npm install
+```
+
+## Load testing scenario definition
+
+Test scenarios in Locust are written as Python code.
+
+In this repository, the scenario definition is written in `assets/locust-container/scenario.py`. Please modify it before deploying.
+
+Also, if you need other packages or libraries for your test scenario, change the requirements.txt or Dockerfile in the same directory.
+
+## Deployment
+
+```bash
+npx cdk diff  # Check diff
+npx cdk deploy FoundationStack LocustClusterStack
+```
