@@ -28,6 +28,7 @@ export class LocustClusterStack extends cdk.Stack {
       targets: [services.masterService],
       port: 8089,
       protocol: elbv2.ApplicationProtocol.HTTP,
+      deregistrationDelay: cdk.Duration.seconds(30),
     });
 
     const loadBalancerSG = new ec2.SecurityGroup(this, 'LBSG', { vpc });
@@ -37,6 +38,10 @@ export class LocustClusterStack extends cdk.Stack {
     const listener = lb.addListener('Listener', { open: false, port: 80 });
     listener.addAction('ForwardLocustGUI', {
       action: elbv2.ListenerAction.forward([locustGuiTargetGroup]),
+    });
+
+    new cdk.CfnOutput(this, 'ServiceURL', {
+      value: 'http://' + lb.loadBalancerDnsName,
     });
   }
 }
