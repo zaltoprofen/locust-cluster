@@ -14,6 +14,7 @@ export class FoundationStack extends cdk.Stack {
     this.vpc = new ec2.Vpc(this, 'Vpc', {
       cidr: props?.vpcCidr,
       maxAzs: 2,
+      natGateways: 1,
     });
   }
 }

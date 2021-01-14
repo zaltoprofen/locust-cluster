@@ -6,13 +6,17 @@ import * as sd from '@aws-cdk/aws-servicediscovery';
 import { LocustServices } from './constructs/locust-services';
 
 export interface LocustClusterStackProps extends cdk.StackProps {
-  readonly vpc: ec2.IVpc;
+  readonly vpc?: ec2.IVpc;
 }
 
 export class LocustClusterStack extends cdk.Stack {
   constructor(scope: cdk.Construct, id: string, props: LocustClusterStackProps) {
     super(scope, id, props);
-    const { vpc } = props;
+
+    const vpc = props.vpc ?? new ec2.Vpc(this, 'DefaultVpc', {
+      maxAzs: 2,
+      natGateways: 1,
+    });
 
     const cluster = new ecs.Cluster(this, 'Cluster', { vpc });
     const namespace = new sd.PrivateDnsNamespace(this, 'Namespace', { vpc, name: 'locust.local' });
