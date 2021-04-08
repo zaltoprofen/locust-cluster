@@ -16,5 +16,8 @@ export class FoundationStack extends cdk.Stack {
       maxAzs: 2,
       natGateways: 1,
     });
+    this.vpc.addInterfaceEndpoint('EcrDockerEndpoint', {
+      service: ec2.InterfaceVpcEndpointAwsService.ECR_DOCKER,
+    });
   }
 }
